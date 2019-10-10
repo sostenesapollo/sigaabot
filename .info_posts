@@ -1,0 +1,10 @@
+=> Post Data Turma
+
+form_acessarTurmaVirtualj_id_1               ==>   form_acessarTurmaVirtualj_id_1
+form_acessarTurmaVirtualj_id_1:turmaVirtual  ==>   form_acessarTurmaVirtualj_id_1:turmaVirtual
+idTurma                                      ==>   319421
+javax.faces.ViewState                        ==>   j_id1
+
+=> Headers
+
+Upgrade-Insecure-Requests : 1
