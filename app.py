@@ -6,7 +6,7 @@ CORS(app)
 
 @app.route("/")
 def home():
-	return "SigaaBot"
+	return "Working"
 
 if __name__  == "__main__" :	
 	app.run(debug = True)
