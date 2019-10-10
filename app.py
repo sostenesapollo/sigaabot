@@ -51,11 +51,19 @@ def main():
 
 	s = turma_soup.find(id='formAva').find_all('span')
 	
-	f = open("file.html",'w')
+	f = open("file.html",'w')	
 	for i in s:
 		if i.find(class_='titulo'):
-			print(i.find(class_='titulo').text.replace("\n",'').replace("\t",''))
-		f.write(str(i).replace("\n",'').replace("t",''))
+			title = i.find(class_='titulo').text.replace("\n",'').replace("\t",'')
+			print(title)
+		if i.find(class_='conteudotopico'):			
+			content = i.find(class_='conteudotopico').find_all('span')
+			if(len(content) > 0):
+				for span in content:
+					if(span.find('a')):
+						print('--->',span.find('a').text)
+
+		f.write(str(i))
 		f.write("\n\n*****************\n\n")
 	f.close()
 	return(turma_request.text)
