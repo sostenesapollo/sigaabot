@@ -1,3 +1,7 @@
+# SigaBot
+# A web Crawler designed by Sóstenes Apollo
+# Github: https://github.com/sostenesapollo12
+
 from flask import Flask, request
 from flask_cors import CORS
 from bs4 import BeautifulSoup
@@ -8,6 +12,12 @@ import os
 app = Flask(__name__)
 CORS(app)
 session = requests.Session()
+
+# Here you add your sigaa credentials
+user_credentials = {
+	"username":"",
+	"password":""
+}
 
 url = {
 	'login':'https://sigaa.ufpi.br/sigaa/logar.do?dispatch=logOn',
@@ -80,24 +90,53 @@ def main(user, turma_id):
 					f['post']["id"] = file.find('a')['onclick'][file.find('a')['onclick'].find("'id':"):].replace("'id':'",'').split("'")[0]
 					f['post']["javax.faces.ViewState"] = turma_soup.find(id="javax.faces.ViewState")['value']
 					files.append(f)						
-	for fl in files:		
-		r = session.post(url['file'], headers=h, params=fl['post'], allow_redirects=True)
-		filename = get_filename_from_cd(r.headers.get('content-disposition'))	
-		foldername = data['disciplinas'][turma_id]['data']['Nome']	
-		if not os.path.isdir("out/"+foldername)	:
-			os.mkdir('out/'+foldername)
-		if filename:			
-			with open('out/'+foldername+'/'+filename , 'wb') as f:
+
+	#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
+	# Download All Files and create directories for all your sigaa files
+	# The folder organization template
+		# DISCIPLINA 1
+		#  -- FILE1.pdf
+		#  -- File2.pdf
+		# DISCIPLINA 2
+		#  -- File1.docx
+
+	# for fl in files:				
+	# 	r = session.post(url['file'], headers=h, params=fl['post'], allow_redirects=True)
+	# 	filename = get_filename_from_cd(r.headers.get('content-disposition'))	
+	# 	foldername = data['disciplinas'][turma_id]['data']['Nome']	
+	# 	if not os.path.isdir("out/"+foldername)	:
+	# 		os.mkdir('out/'+foldername)
+	# 	if filename:			
+	# 		with open('out/'+foldername+'/'+filename , 'wb') as f:
+	# 			print("Baixando",filename)
+	# 			f.write(r.content)	
+	#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
+
+	
+	#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
+	# Here you can add the interval to download the files	
+	# Example in range(1,1000), in range(3000,5000)		
+	# This part of code also organizes the files by extension
+	for i in range(2155002, 2155017):
+		files[0]['post']['id'] = i
+		r = session.post(url['file'], headers=h, params=files[0]['post'], allow_redirects=True)
+		filename = get_filename_from_cd(r.headers.get('content-disposition'))				
+		if filename:					
+			ext = filename.split('.').pop()
+			if( not os.path.isdir('out/'+ext) ):
+				os.mkdir('out/'+ext)
+			with open('out/'+ext+'/'+filename , 'wb') as f:
 				print("Baixando",filename)
 				f.write(r.content)
+	#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
+
 	return(turma_request.text)
 
-for i in range(0, 7):
-	try:		
-		main({'user.login':'sostenesapollo12','user.senha':'81020002abc'},i)
-		print("---")
-	except Exception as e:
-		print('Exception in',str(i),str(e))	
+try:		
+	main({'user.login':user_credentials['username'], 'user.senha':user_credentials['password']},0)
+	print("---")
+except Exception as e:
+	print('Exception: ',str(e))	
 
 if __name__  == "__main__" :	
 	app.run(debug = True)
