@@ -15,8 +15,8 @@ session = requests.Session()
 
 # Here you add your sigaa credentials
 user_credentials = {
-	"username":"",
-	"password":""
+	"username":"sostenesapollo12",
+	"password":"81020002abc"
 }
 
 url = {
@@ -38,7 +38,8 @@ def get_filename_from_cd(cd):
     return fname[0].replace('"','')
 
 @app.route("/")
-def main(user, turma_id):		
+def main():
+	user = {'user.login':request.args.get('user.login'), 'user.senha':request.args.get('user.senha')}	
 	# Extractiong info of turmas and creating forms data 
 	login_request = session.post(url['login'], params=user)
 	home_soup = BeautifulSoup(login_request.text, 'html.parser')
@@ -67,7 +68,7 @@ def main(user, turma_id):
 			data['disciplinas'].append(disciplina)			
 
 	# print(data['disciplinas'][1]['form'])	
-	turma_request = session.post(url['turma'], params=data['disciplinas'][turma_id]['form'])
+	turma_request = session.post(url['turma'], params=data['disciplinas'][1]['form'])
 	turma_soup = BeautifulSoup(turma_request.text,'html.parser')
 
 	topicos_aulas = turma_soup.find(id='formAva').find_all(class_='topico-aula')
@@ -117,23 +118,24 @@ def main(user, turma_id):
 	# Here you can add the interval to download the files	
 	# Example in range(1,1000), in range(3000,5000)		
 	# This part of code also organizes the files by extension
-	for i in range(2155002, 2155017):
-		files[0]['post']['id'] = i
-		r = session.post(url['file'], headers=h, params=files[0]['post'], allow_redirects=True)
-		filename = get_filename_from_cd(r.headers.get('content-disposition'))				
-		if filename:					
-			ext = filename.split('.').pop()
-			if( not os.path.isdir('out/'+ext) ):
-				os.mkdir('out/'+ext)
-			with open('out/'+ext+'/'+filename , 'wb') as f:
-				print("Baixando",filename)
-				f.write(r.content)
+	# for i in range(2155200, 2155250):
+	# 	files[0]['post']['id'] = i
+	# 	r = session.post(url['file'], headers=h, params=files[0]['post'], allow_redirects=True)
+	# 	filename = get_filename_from_cd(r.headers.get('content-disposition'))				
+	# 	if filename:					
+	# 		ext = filename.split('.').pop()
+	# 		if( not os.path.isdir('out/'+ext) ):
+	# 			os.mkdir('out/'+ext)
+	# 		with open('out/'+ext+'/'+filename , 'wb') as f:
+	# 			print("Baixando",filename)
+	# 			f.write(r.content)
 	#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
-	return(turma_request.text)
+	return(data)
 
-try:		
-	main({'user.login':user_credentials['username'], 'user.senha':user_credentials['password']},0)
+try:			
+	for i in range(1, 7):
+		main({'user.login':user_credentials['username'], 'user.senha':user_credentials['password']},i)
 	print("---")
 except Exception as e:
 	print('Exception: ',str(e))	
