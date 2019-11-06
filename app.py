@@ -49,7 +49,8 @@ def main():
 	# Board User Info
 	for item in user_board_soup:
 		if(len(item.find_all('td')) == 2):			
-			data['user_data'][item.find_all('td')[0].text] = item.find_all('td')[1].text.replace("\n",'').replace('\t', ' ').replace(" ",'')
+			data['user_data'][item.find_all('td')[0].text.replace(" ",'').replace(":",'')] = item.find_all('td')[1].text.replace("\n",'').replace('\t', ' ').replace(" ",'')
+	data['user_data']['nome'] = home_soup.find("small").text
 	data['Período Atual'] = home_soup.find(class_='periodo-atual').find('strong').text	
 	data['img_src'] = home_soup.find(class_='foto').find('img')['src']
 	# Board Disciplinas
