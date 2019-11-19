@@ -15,8 +15,8 @@ session = requests.Session()
 
 # Here you add your sigaa credentials
 user_credentials = {
-	"username":"sostenesapollo12",
-	"password":"81020002abc"
+	"username":"",
+	"password":""
 }
 
 url = {
