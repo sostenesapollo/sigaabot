@@ -1,5 +1,4 @@
 # Sigaabot
-Um script engraçado (Vulnerabilidade do sigaa ? (talvez) )
 
 Esse script faz o download de arquivos do sigaa com o seu usuário e sua senha,
 é engraçado pq você não precisa estar autenticado para baixar os arquivos, no código é só você
