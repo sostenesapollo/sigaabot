@@ -1,7 +1,7 @@
 # SigaBot
 # A web Crawler designed by Sóstenes Apollo
 # Github: https://github.com/sostenesapollo12
-
+  
 from flask import Flask, request
 from flask_cors import CORS
 from bs4 import BeautifulSoup
